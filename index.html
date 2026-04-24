@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>The Outlaw Seeds – Sons of Cannabis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Rye&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --black:    #0a0906;
+      --dark:     #111009;
+      --beige:    #d9c99a;
+      --sand:     #c4a96b;
+      --gold:     #e8b84b;
+      --amber:    #c97d1e;
+      --green:    #4a6741;
+      --sage:     #7a9e6e;
+      --sage-lt:  #a8c89a;
+      --rust:     #8b3a1a;
+      --cream:    #f2e8cc;
+      --border:   rgba(232,184,75,.25);
+      --border-s: rgba(232,184,75,.6);
+      --font-display: 'Rye', serif;
+      --font-head:    'Playfair Display', serif;
+      --font-body:    'Lora', serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--beige);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── GRAIN OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+      background-size: 200px;
+      pointer-events: none;
+      opacity: .5;
+    }
+
+    /* ── WRAPPER (max-width mobile-first look on desktop) ── */
+    .app-shell {
+      position: relative; z-index: 1;
+      max-width: 430px;
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+    }
+
+    /* ── STATUS BAR ── */
+    .status-bar {
+      background: var(--dark);
+      padding: 8px 20px 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: .65rem;
+      letter-spacing: .12em;
+      color: var(--sand);
+      border-bottom: 1px solid var(--border);
+    }
+    .status-bar .time { font-weight: 700; font-size: .7rem; }
+    .status-icons { display: flex; gap: 6px; align-items: center; }
+    .status-icons span { font-size: .65rem; }
+
+    /* ── HERO HEADER ── */
+    header.hero {
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, #1a1508 0%, var(--dark) 70%);
+      padding: 28px 24px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    header.hero::after {
+      content: '';
+      position: absolute; bottom: -1px; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), var(--amber), var(--gold), transparent);
+    }
+
+    /* ── LOGO ── */
+    .logo-wrap {
+      width: 110px; height: 110px;
+      position: relative;
+    }
+    .logo-ring {
+      position: absolute; inset: -6px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, #c97d1e, #e8b84b, #7a9e6e, #c4a96b, #c97d1e);
+      animation: spinRing 8s linear infinite;
+      opacity: .9;
+    }
+    @keyframes spinRing { to { transform: rotate(360deg); } }
+    .logo-inner {
+      position: relative; z-index: 2;
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid var(--black);
+      background: #1a1508;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-inner img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .brand-name {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      color: var(--gold);
+      letter-spacing: .08em;
+      text-align: center;
+      line-height: 1.15;
+      text-shadow: 0 0 20px rgba(232,184,75,.4);
+    }
+    .brand-sub {
+      font-family: var(--font-body);
+      font-size: .65rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-top: -10px;
+    }
+    .badge-novelty {
+      background: var(--rust);
+      color: var(--cream);
+      font-size: .6rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.15);
+      font-family: var(--font-body);
+    }
+
+    /* ── BOTTOM NAV ── */
+    nav.bottom-nav {
+      position: sticky; bottom: 0; z-index: 100;
+      background: rgba(10,9,6,.96);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border-s);
+      display: flex;
+      padding: 0;
+    }
+    nav.bottom-nav button {
+      flex: 1;
+      background: none; border: none;
+      color: var(--sand);
+      font-family: var(--font-body);
+      font-size: .55rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 10px 4px 14px;
+      cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      transition: color .2s;
+      position: relative;
+    }
+    nav.bottom-nav button.active,
+    nav.bottom-nav button:hover { color: var(--gold); }
+    nav.bottom-nav button.active::after {
+      content: '';
+      position: absolute; top: 0; left: 20%; right: 20%; height: 2px;
+      background: linear-gradient(90deg, var(--amber), var(--gold));
+      border-radius: 0 0 4px 4px;
+    }
+    nav.bottom-nav button .nav-icon { font-size: 1.2rem; line-height: 1; }
+
+    /* ── MAIN CONTENT ── */
+    main { flex: 1; }
+
+    /* ── PAGES (sections) ── */
+    .page { display: none; padding: 0 0 24px; animation: fadeUp .35s ease; }
+    .page.active { display: block; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── HOME PAGE ── */
+    .home-banner {
+      background: linear-gradient(160deg, #0d1109 0%, #0a0906 100%);
+      padding: 28px 24px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .home-banner h2 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      color: var(--gold);
+      margin-bottom: 8px;
+      text-shadow: 0 2px 16px rgba(232,184,75,.3);
+    }
+    .home-banner p {
+      font-size: .85rem;
+      color: var(--beige);
+      line-height: 1.7;
+      max-width: 320px;
+      margin: 0 auto;
+      font-style: italic;
+    }
+
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 24px;
+      color: var(--amber);
+      font-size: .6rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-s));
+    }
+    .divider::after { background: linear-gradient(270deg, transparent, var(--border-s)); }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 0 16px 24px;
+    }
+    .card {
+      background: linear-gradient(145deg, #141108, #0f0d07);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform .2s, border-color .2s, box-shadow .2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(232,184,75,.05) 0%, transparent 60%);
+    }
+    .card:hover, .card:active {
+      transform: translateY(-2px);
+      border-color: var(--gold);
+      box-shadow: 0 8px 24px rgba(232,184,75,.12);
+    }
+    .card-icon { font-size: 2rem; margin-bottom: 8px; display: block; }
+    .card-title {
+      font-family: var(--font-head);
+      font-size: .8rem;
+      color: var(--cream);
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    .card-desc {
+      font-size: .65rem;
+      color: var(--sand);
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    /* ── POLICY PAGES ── */
+    .page-hero {
+      background: linear-gradient(180deg, #131008 0%, var(--dark) 100%);
+      padding: 28px 24px 20px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .page-hero::after {
+      content: ''; position: absolute; bottom: 0; left: 24px; right: 24px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--amber), transparent);
+    }
+    .page-hero .page-icon { font-size: 2.2rem; margin-bottom: 10px; display: block; }
+    .page-hero h2 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .page-hero p {
+      font-size: .72rem;
+      color: var(--sage);
+      letter-spacing: .06em;
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    .policy-content {
+      padding: 20px 20px 8px;
+    }
+    .policy-section {
+      margin-bottom: 24px;
+    }
+    .policy-section h3 {
+      font-family: var(--font-head);
+      font-size: .95rem;
+      color: var(--gold);
+      font-weight: 700;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .policy-section h3 .sec-icon { font-size: 1rem; }
+    .policy-section p,
+    .policy-section li {
+      font-size: .78rem;
+      color: var(--beige);
+      line-height: 1.8;
+      margin-bottom: 8px;
+    }
+    .policy-section ul {
+      padding-left: 18px;
+      list-style: none;
+    }
+    .policy-section ul li::before {
+      content: '⬦ ';
+      color: var(--amber);
+      font-size: .6rem;
+      margin-left: -16px;
+      margin-right: 4px;
+    }
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(138,58,26,.2), rgba(232,184,75,.08));
+      border: 1px solid rgba(232,184,75,.2);
+      border-left: 3px solid var(--amber);
+      border-radius: 0 10px 10px 0;
+      padding: 12px 16px;
+      margin: 12px 0;
+    }
+    .highlight-box p {
+      font-size: .75rem !important;
+      color: var(--cream) !important;
+      font-style: italic;
+    }
+    .age-badge {
+      display: inline-flex;
+      align-items: center; justify-content: center;
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      border: 2px solid var(--rust);
+      background: rgba(139,58,26,.2);
+      font-family: var(--font-display);
+      font-size: .9rem;
+      color: var(--rust);
+      margin: 12px auto;
+      display: block;
+      text-align: center;
+      line-height: 52px;
+    }
+    .last-update {
+      text-align: center;
+      font-size: .65rem;
+      color: var(--sand);
+      letter-spacing: .12em;
+      padding: 8px 20px 20px;
+      font-style: italic;
+    }
+
+    /* ── COOKIE BANNER ── */
+    .cookie-banner {
+      position: fixed; bottom: 72px; left: 50%; transform: translateX(-50%);
+      width: min(400px, calc(100vw - 16px));
+      background: linear-gradient(135deg, #181409, #0f0d07);
+      border: 1px solid var(--border-s);
+      border-radius: 16px;
+      padding: 18px 20px;
+      z-index: 200;
+      box-shadow: 0 16px 40px rgba(0,0,0,.6);
+      display: none;
+    }
+    .cookie-banner.show { display: block; animation: slideUp .4s ease; }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+    .cookie-banner h4 {
+      font-family: var(--font-display);
+      font-size: .85rem;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .cookie-banner p {
+      font-size: .7rem;
+      color: var(--beige);
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+    .cookie-actions { display: flex; gap: 8px; }
+    .btn {
+      flex: 1;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: none; cursor: pointer;
+      font-family: var(--font-body);
+      font-size: .7rem;
+      font-weight: 600;
+      letter-spacing: .08em;
+      transition: transform .15s, opacity .15s;
+    }
+    .btn:hover { opacity: .88; transform: translateY(-1px); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--amber), var(--gold));
+      color: var(--black);
+    }
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border-s);
+      color: var(--sand);
+    }
+
+    /* ── AGE GATE ── */
+    .age-gate {
+      position: fixed; inset: 0; z-index: 500;
+      background: var(--black);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column;
+      gap: 20px;
+      padding: 32px;
+      text-align: center;
+    }
+    .age-gate .logo-wrap { width: 90px; height: 90px; }
+    .age-gate h2 {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      color: var(--gold);
+      line-height: 1.3;
+    }
+    .age-gate p {
+      font-size: .78rem;
+      color: var(--beige);
+      line-height: 1.7;
+      max-width: 280px;
+      font-style: italic;
+    }
+    .age-gate-buttons { display: flex; gap: 12px; width: 100%; max-width: 280px; }
+    .age-gate-buttons .btn { padding: 14px; font-size: .75rem; }
+    .age-gate small {
+      font-size: .62rem; color: var(--sand); letter-spacing: .08em;
+    }
+
+    /* ── SCROLL CUSTOM ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--dark); }
+    ::-webkit-scrollbar-thumb { background: var(--amber); border-radius: 4px; }
+
+    /* Deco border bottom page */
+    .page-end-deco {
+      text-align: center;
+      padding: 16px;
+      color: var(--border-s);
+      font-size: 1rem;
+      letter-spacing: .6em;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- AGE GATE -->
+  <div class="age-gate" id="ageGate">
+    <div class="logo-wrap">
+      <div class="logo-ring"></div>
+      <div class="logo-inner">
+        <img src="logo-1.png" alt="The Outlaw Seeds Logo" />
+      </div>
+    </div>
+    <h2>Sons of Cannabis<br>Forever Free</h2>
+    <p>Este sitio contiene información sobre cannabis. Debes ser mayor de 18 años para acceder. ¿Tienes la edad legal en tu país?</p>
+    <div class="age-gate-buttons">
+      <button class="btn btn-secondary" onclick="denyAge()">No, salir</button>
+      <button class="btn btn-primary" onclick="confirmAge()">Sí, tengo +18</button>
+    </div>
+    <small>FOR NOVELTY PURPOSES ONLY · PASSION & LOVE</small>
+  </div>
+
+  <!-- COOKIE BANNER -->
+  <div class="cookie-banner" id="cookieBanner">
+    <h4>🍪 Cookies del Outlaw</h4>
+    <p>Usamos cookies para mejorar tu experiencia en el Territorio Outlaw. Puedes aceptarlas todas o solo las esenciales.</p>
+    <div class="cookie-actions">
+      <button class="btn btn-secondary" onclick="acceptCookies('essential')">Solo esenciales</button>
+      <button class="btn btn-primary" onclick="acceptCookies('all')">Aceptar todo</button>
+    </div>
+  </div>
+
+  <!-- APP SHELL -->
+  <div class="app-shell">
+
+    <!-- STATUS BAR -->
+    <div class="status-bar">
+      <span class="time" id="clockTime">00:00</span>
+      <span style="letter-spacing:.14em;font-size:.6rem;color:var(--amber)">THE OUTLAW SEEDS</span>
+      <div class="status-icons">
+        <span>⬤⬤⬤</span>
+        <span>WiFi</span>
+        <span>🔋</span>
+      </div>
+    </div>
+
+    <!-- HERO -->
+    <header class="hero">
+      <div class="logo-wrap">
+        <div class="logo-ring"></div>
+        <div class="logo-inner">
+          <img src="logo-1.png" alt="The Outlaw Seeds" />
+        </div>
+      </div>
+      <div>
+        <div class="brand-name">The Outlaw Seeds</div>
+        <div class="brand-sub">Sons of Cannabis · Forever Free</div>
+      </div>
+      <span class="badge-novelty">⚠ For Novelty Purposes Only</span>
+    </header>
+
+    <!-- MAIN -->
+    <main>
+
+      <!-- HOME -->
+      <section class="page active" id="page-home">
+        <div class="home-banner">
+          <h2>Bienvenido al Territorio</h2>
+          <p><em>"Passion & Love Only"</em> — Explora nuestras políticas, términos y todo lo que necesitas saber sobre el uso responsable y legal del cannabis medicinal.</p>
+        </div>
+
+        <div class="divider">Navega el territorio</div>
+
+        <div class="card-grid">
+          <div class="card" onclick="showPage('privacidad')">
+            <span class="card-icon">🔐</span>
+            <div class="card-title">Política de Privacidad</div>
+            <div class="card-desc">Tus datos, tu territorio</div>
+          </div>
+          <div class="card" onclick="showPage('terminos')">
+            <span class="card-icon">📜</span>
+            <div class="card-title">Términos y Condiciones</div>
+            <div class="card-desc">Las leyes del Outlaw</div>
+          </div>
+          <div class="card" onclick="showPage('cookies')">
+            <span class="card-icon">🍪</span>
+            <div class="card-title">Política de Cookies</div>
+            <div class="card-desc">Rastros en el camino</div>
+          </div>
+          <div class="card" onclick="showPage('cannabis')">
+            <span class="card-icon">🌿</span>
+            <div class="card-title">Cannabis Medicinal</div>
+            <div class="card-desc">Uso responsable</div>
+          </div>
+        </div>
+
+        <div class="divider">Nuestro código</div>
+        <div style="padding:0 20px 24px;text-align:center;">
+          <p style="font-size:.78rem;color:var(--beige);line-height:1.8;font-style:italic;">"Seeds are sold strictly for <strong style='color:var(--gold)'>novelty, souvenir, and collection purposes only</strong>. Any germination or cultivation is at the sole discretion of the end user, subject to local laws."</p>
+        </div>
+        <div class="page-end-deco">✦ · · ✦ · · ✦</div>
+      </section>
+
+      <!-- PRIVACIDAD -->
+      <section class="page" id="page-privacidad">
+        <div class="page-hero">
+          <span class="page-icon">🔐</span>
+          <h2>Política de Privacidad</h2>
+          <p>Tu información es tan sagrada como el territorio del Outlaw. Aquí te explicamos cómo la protegemos.</p>
+        </div>
+        <div class="policy-content">
+          <div class="policy-section">
+            <h3><span class="sec-icon">📋</span> Información que recopilamos</h3>
+            <p>Recopilamos únicamente los datos necesarios para brindarte la mejor experiencia en nuestro sitio:</p>
+            <ul>
+              <li>Nombre y dirección de correo electrónico al suscribirte</li>
+              <li>Datos de navegación anónimos para mejorar el contenido</li>
+              <li>Información de localización general (país/región)</li>
+              <li>Preferencias de idioma y configuración del sitio</li>
+            </ul>
+          </div>
+          <div class="policy-section">
+            <h3><span class="sec-icon">🛡️</span> Cómo protegemos tus datos</h3>
+            <p>Implementamos medidas de seguridad técnicas y organizativas de nivel industrial para proteger tu información personal contra acceso no autorizado, alteración, divulgación o destrucción.</p>
+            <div class="highlight-box">
+              <p>Nunca vendemos, alquilamos ni compartimos tu información personal con terceros sin tu consentimiento explícito.</p>
+            </div>
+          </div>
+          <div class="policy-section">
+            <h3><span class="sec-icon">🎯</span> Uso de la información</h3>
+            <ul>
+              <li>Envío de actualizaciones y novedades del catálogo (solo si te suscribiste)</li>
+              <li>Mejora continua de nuestra plataforma web</li>
+              <li>Cumplimiento de obligaciones legales</li>
+              <li>Atención a consultas y soporte al usuario</li>
+            </ul>
+          </div>
+          <div class="policy-section">
+            <h3><span class="sec-icon">⚖️</span> Tus derechos (RGPD)</h3>
+            <p>De acuerdo con el Reglamento General de Protección de Datos (RGPD), tienes derecho a:</p>
+            <ul>
+              <li>Acceder a tus datos personales en cualquier momento</li>
+              <li>Rectificar información inexacta o incompleta</li>
+              <li>Solicitar la eliminación de tus datos ("derecho al olvido")</li>
+              <li>Oponerte al tratamiento de tus datos</li>
+              <li>Portabilidad de datos a otro proveedor</li>
+            </ul>
+          </div>
+          <div class="policy-section">
+            <h3><span class="sec-icon">📧</span> Contacto</h3>
+            <p>Para ejercer tus derechos o resolver cualquier duda sobre privacidad, escríbenos a: <strong style="color:var(--gold)">privacy@theoutlawseeds.com</strong></p>
+          </div>
+        </div>
+        <div class="last-update">Última actualización: Abril 2026</div>
+        <div class="page-end-deco">✦ · · ✦ · · ✦</div>
+      </section>
+
+      <!-- TÉRMINOS -->
+      <section class="page" id="page-terminos">
+        <div class="page-hero">
+          <span class="page-icon">📜</span>
+          <h2>Términos y Condiciones</h2>
+          <p>Las leyes del territorio Outlaw. Léelas con atención antes de cabalgar.</p>
+        </div>
+        <div class="policy-content">
+          <div class="policy-section">
+            <h3><span class="sec-icon">🌵</span> Aceptación de términos</h3>
+            <p>Al acceder y utilizar este sitio web, aceptas quedar vinculado por estos Términos y Condiciones. Si no estás de acuerdo con alguna parte, debes abandonar el sitio inmediatamente.</p>
+          </div>
+          <div class="policy-section">
+            <h3><span class="sec-icon">⚠️</span> Uso exclusivamente legal</h3>
+            <div class="highlight-box">
+              <p><strong>IMPORTANTE:</strong> Todos los productos se venden EXCLUSIVAMENTE con fines de colección, souvenir y novedad. La germinación de semillas puede ser ilegal en tu país. El usuario es el único responsable de conocer y cumplir las leyes locales.</p>
+            </div>
+            <ul>
+              <li>Este sitio no promueve ni facilita actividades ilegales</li>
+              <li>The Outlaw Seeds no se responsabiliza del uso indebido de sus productos</li>
+              <li>Los productos no deben ser usados para fines no autorizados por la ley local</li>
+            </ul>
+          </div>
+          <div class="policy-section">
+            <h3><span class="sec-icon">🔞</span> Restricción de edad</h3>
+            <div class="age-badge">+18</div>
+            <p style="text-align:center;">Este sitio web está destinado exclusivamente a personas mayores de 18 años o la edad legal en su país/región. Al acceder, confirmas que cumples este requisito.</p>
+          </div>
+          <div class="policy-section">
+            <h3><span class="sec-icon">©️</span> Propiedad intelectual</h3>
+            <p>Todo el contenido de este sitio — incluyendo logotipos, imágenes, textos y diseños — es propiedad de The Outlaw Seeds y está protegido por leyes de derechos de autor internacionales. Queda prohibida su reproducción sin autorización expresa.</p>
+          </div>
+          <div class="policy-section">
+            <h3><span class="sec-icon">⚡</span> Limitación de responsabilidad</h3>
+            <p>The Outlaw Seeds no será responsable por daños directos, indirectos, incidentales o consecuentes derivados del uso o la imposibilidad de usar este sitio o sus productos.</p>
+          </div>
+          <div class="policy-section">
+            <h3><span class="sec-icon">⚖️</span> Ley aplicable</h3>
+            <p>Estos términos se rigen por la legislación española y europea vigente. Cualquier disputa será sometida a los tribunales competentes de España.</p>
+          </div>
+        </div>
+        <div class="last-update">Última actualización: Abril 2026</div>
+        <div class="page-end-deco">✦ · · ✦ · · ✦</div>
+      </section>
+
+      <!-- COOKIES -->
+      <section class="page" id="page-cookies">
+        <div class="page-hero">
+          <span class="page-icon">🍪</span>
+          <h2>Política de Cookies</h2>
+          <p>Pequeños rastros en tu camino a través del territorio Outlaw.</p>
+        </div>
+        <div class="policy-content">
+          <div class="policy-section">
+            <h3><span class="sec-icon">❓</span> ¿Qué son las cookies?</h3>
+            <p>Las cookies son pequeños archivos de texto que se almacenan en tu dispositivo cuando visitas un sitio web. Nos permiten recordar tus preferencias y mejorar tu experiencia de navegación.</p>
+          </div>
+          <div class="policy-section">
+            <h3><span class="sec-icon">📂</span> Tipos de cookies que usamos</h3>
+            <ul>
+              <li><strong style="color:var(--sage-lt)">Esenciales:</strong> Necesarias para el funcionamiento básico del sitio. No pueden desactivarse.</li>
+              <li><strong style="color:var(--sage-lt)">Funcionales:</strong> Recuerdan tus preferencias (idioma, región, tema visual).</li>
+              <li><strong style="color:var(--sage-lt)">Analíticas:</strong> Nos ayudan a entender cómo los usuarios interactúan con el sitio (Google Analytics, datos anonimizados).</li>
+              <li><strong style="color:var(--sage-lt)">De marketing:</strong> Solo si las aceptas explícitamente, para mostrarte contenido relevante.</li>
+            </ul>
+          </div>
+          <div class="policy-section">
+            <h3><span class="sec-icon">🎛️</span> Control de cookies</h3>
+            <p>Puedes gestionar o eliminar cookies en cualquier momento desde la configuración de tu navegador. También puedes modificar tus preferencias aquí:</p>
+            <div style="padding:12px 0;display:flex;gap:10px;">
+              <button class="btn btn-secondary" style="flex:1;font-size:.68rem;" onclick="acceptCookies('essential')">Solo esenciales</button>
+              <button class="btn btn-primary" style="flex:1;font-size:.68rem;" onclick="acceptCookies('all')">Aceptar todas</button>
+            </div>
+          </div>
+          <div class="policy-section">
+            <h3><span class="sec-icon">⏱️</span> Duración de las cookies</h3>
+            <ul>
+              <li><strong style="color:var(--gold)">Sesión:</strong> Se eliminan al cerrar el navegador</li>
+              <li><strong style="color:var(--gold)">Persistentes:</strong> Duran entre 30 días y 2 años según el tipo</li>
+              <li><strong style="color:var(--gold)">Verificación de edad:</strong> 30 días</li>
+            </ul>
+          </div>
+        </div>
+        <div class="last-update">Última actualización: Abril 2026</div>
+        <div class="page-end-deco">✦ · · ✦ · · ✦</div>
+      </section>
+
+      <!-- CANNABIS MEDICINAL -->
+      <section class="page" id="page-cannabis">
+        <div class="page-hero">
+          <span class="page-icon">🌿</span>
+          <h2>Cannabis Medicinal</h2>
+          <p>Información sobre el uso responsable, legal y terapéutico del cannabis. Siempre bajo supervisión médica.</p>
+        </div>
+        <div class="policy-content">
+          <div class="policy-section">
+            <h3><span class="sec-icon">⚕️</span> ¿Qué es el cannabis medicinal?</h3>
+            <p>El cannabis medicinal se refiere al uso de la planta <em>Cannabis sativa</em> o sus derivados para tratar condiciones médicas bajo prescripción y supervisión de un profesional de la salud.</p>
+            <div class="highlight-box">
+              <p>The Outlaw Seeds proporciona esta información únicamente con fines educativos. No somos médicos y nada aquí debe interpretarse como consejo médico.</p>
+            </div>
+          </div>
+          <div class="policy-section">
+            <h3><span class="sec-icon">🧪</span> Principales cannabinoides</h3>
+            <ul>
+              <li><strong style="color:var(--sage-lt)">CBD (Cannabidiol):</strong> No psicoactivo. Estudiado para ansiedad, dolor crónico, epilepsia y propiedades antiinflamatorias.</li>
+              <li><strong style="color:var(--sage-lt)">THC (Tetrahidrocannabinol):</strong> Componente psicoactivo. Usado en tratamientos de náuseas por quimioterapia, glaucoma y estimulación del apetito.</li>
+              <li><strong style="color:var(--sage-lt)">CBN / CBG:</strong> Cannabinoides menores con potencial terapéutico en investigación.</li>
+            </ul>
+          </div>
+          <div class="policy-section">
+            <h3><span class="sec-icon">🏥</span> Condiciones estudiadas</h3>
+            <ul>
+              <li>Dolor crónico y neuropático</li>
+              <li>Esclerosis múltiple y espasticidad muscular</li>
+              <li>Epilepsia refractaria (Dravet, Lennox-Gastaut)</li>
+              <li>Náuseas y vómitos post-quimioterapia</li>
+              <li>Ansiedad, PTSD e insomnio (en evaluación clínica)</li>
+              <li>Apetito en pacientes oncológicos y con VIH</li>
+            </ul>
+          </div>
+          <div class="policy-section">
+            <h3><span class="sec-icon">⚖️</span> Marco legal en España</h3>
+            <p>En España, el cannabis medicinal está regulado por la Agencia Española de Medicamentos y Productos Sanitarios (AEMPS). Los medicamentos a base de cannabinoides aprobados requieren prescripción médica.</p>
+            <ul>
+              <li>El CBD con menos de 0,2% de THC puede venderse como suplemento</li>
+              <li>El cultivo personal sigue siendo un área jurídica gris</li>
+              <li>Consulta siempre con un abogado o médico antes de actuar</li>
+            </ul>
+          </div>
+          <div class="policy-section">
+            <h3><span class="sec-icon">🌍</span> Marco internacional</h3>
+            <p>Las leyes varían enormemente entre países. Canada, Uruguay, Alemania, Países Bajos y varios estados de EE.UU. han avanzado en regulación. Siempre verifica la normativa de tu país antes de cualquier acción.</p>
+          </div>
+          <div class="policy-section">
+            <h3><span class="sec-icon">🙏</span> Uso responsable</h3>
+            <ul>
+              <li>Nunca uses cannabis medicinal sin supervisión médica</li>
+              <li>Evita su uso en menores de edad</li>
+              <li>No conduzcas bajo sus efectos</li>
+              <li>Informa a tu médico de todos tus tratamientos actuales</li>
+              <li>Adquiere productos solo en establecimientos legales</li>
+            </ul>
+          </div>
+        </div>
+        <div class="last-update">Información educativa · Abril 2026</div>
+        <div class="page-end-deco">✦ · · ✦ · · ✦</div>
+      </section>
+
+    </main>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+      <button class="active" onclick="showPage('home')" id="nav-home">
+        <span class="nav-icon">🏠</span>Inicio
+      </button>
+      <button onclick="showPage('privacidad')" id="nav-privacidad">
+        <span class="nav-icon">🔐</span>Privacidad
+      </button>
+      <button onclick="showPage('terminos')" id="nav-terminos">
+        <span class="nav-icon">📜</span>Términos
+      </button>
+      <button onclick="showPage('cookies')" id="nav-cookies">
+        <span class="nav-icon">🍪</span>Cookies
+      </button>
+      <button onclick="showPage('cannabis')" id="nav-cannabis">
+        <span class="nav-icon">🌿</span>Cannabis
+      </button>
+    </nav>
+
+  </div><!-- /app-shell -->
+
+  <script>
+    // ── CLOCK ──
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2,'0');
+      const m = String(now.getMinutes()).padStart(2,'0');
+      document.getElementById('clockTime').textContent = h + ':' + m;
+    }
+    updateClock(); setInterval(updateClock, 10000);
+
+    // ── PAGE NAVIGATION ──
+    const pages = ['home','privacidad','terminos','cookies','cannabis'];
+    function showPage(id) {
+      pages.forEach(p => {
+        document.getElementById('page-' + p)?.classList.remove('active');
+        document.getElementById('nav-' + p)?.classList.remove('active');
+      });
+      document.getElementById('page-' + id)?.classList.add('active');
+      document.getElementById('nav-' + id)?.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ── AGE GATE ──
+    function confirmAge() {
+      document.getElementById('ageGate').style.opacity = '0';
+      document.getElementById('ageGate').style.transition = 'opacity .4s';
+      setTimeout(() => {
+        document.getElementById('ageGate').style.display = 'none';
+        if (!localStorage.getItem('cookiesAccepted')) {
+          setTimeout(() => document.getElementById('cookieBanner').classList.add('show'), 800);
+        }
+      }, 400);
+      localStorage.setItem('ageConfirmed', '1');
+    }
+    function denyAge() {
+      window.location.href = 'https://www.google.com';
+    }
+
+    // ── COOKIE BANNER ──
+    function acceptCookies(type) {
+      localStorage.setItem('cookiesAccepted', type);
+      document.getElementById('cookieBanner').classList.remove('show');
+    }
+
+    // On load checks
+    window.addEventListener('load', () => {
+      if (localStorage.getItem('ageConfirmed')) {
+        document.getElementById('ageGate').style.display = 'none';
+        if (!localStorage.getItem('cookiesAccepted')) {
+          setTimeout(() => document.getElementById('cookieBanner').classList.add('show'), 600);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
